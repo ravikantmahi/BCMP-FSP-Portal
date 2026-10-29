@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode/
+.idea/
+*.env
+.env
+*.log
+test_*.pdf
+test_*.docx
+calibration.pdf
+test_output.pdf

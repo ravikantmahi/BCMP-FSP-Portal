@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVR Bootcamp Nomination Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden-field {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans py-12 px-4 sm:px-6">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 px-8 py-10 text-white text-center relative">
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">AVR Bootcamp Nomination Form</h1>
+            <p class="text-blue-100 text-lg md:text-xl font-medium">Augmented & Virtual Reality Acceleration</p>
+            <!-- <div class="mt-4">
+                <a href="/admin" class="text-xs bg-white/10 hover:bg-white/20 text-blue-100 px-3 py-1.5 rounded-full transition-colors">
+                    Admin Dashboard →
+                </a>
+            </div> -->
+        </div>
+
+        <form id="bootcampForm" class="p-8 md:p-10 space-y-10 text-gray-800" novalidate>
+            <!-- Applicant Details -->
+            <section class="bg-white rounded-xl">
+                <h2 class="text-xl font-bold text-blue-900 border-b border-gray-200 pb-3 mb-6">1. Applicant Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-semibold mb-1">Title *</label>
+                        <select name="title" id="title" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all">
+                            <option value="">Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                        <p id="titleError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-semibold mb-1">Applicant Name (as per Gov ID) *</label>
+                        <input name="name" id="name" type="text" required placeholder="Full Name as per Gov ID"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="nameError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="dob" class="block text-sm font-semibold mb-1">Date of Birth *</label>
+                        <input name="dob" id="dob" type="date" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="dobError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-semibold mb-1">Gender *</label>
+                        <select name="gender" id="gender" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <p id="genderError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="mobile" class="block text-sm font-semibold mb-1">Mobile Number *</label>
+                        <input name="mobile" id="mobile" type="tel" required maxlength="10" placeholder="10-digit number (e.g. 9876543210)"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="mobileError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-semibold mb-1">Email ID (official preferred) *</label>
+                        <input name="email" id="email" type="email" required placeholder="applicant@example.com"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="emailError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="aadhar" class="block text-sm font-semibold mb-1">Government-issued ID Number *</label>
+                        <input name="aadhar" id="aadhar" type="text" required maxlength="14"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all"
+                            placeholder="12-digit Gov ID (XXXX XXXX XXXX)" />
+                        <p id="aadharError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="location" class="block text-sm font-semibold mb-1">Native State & District *</label>
+                        <input name="location" id="location" type="text" value="Punjab, Rupnagar (Ropar)" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="locationError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Organisation Details -->
+            <section class="bg-white rounded-xl">
+                <h2 class="text-xl font-bold text-blue-900 border-b border-gray-200 pb-3 mb-6">2. Academic & Organisation Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="qualification" class="block text-sm font-semibold mb-1">Highest Qualification (with Degree & Branch) *</label>
+                        <input name="qualification" id="qualification" type="text" required placeholder="e.g. B.Tech Computer Science"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="qualificationError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-semibold mb-1">Status *</label>
+                        <select name="status" id="status" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all">
+                            <option value="">Select Status</option>
+                            <option value="Pursuing">Pursuing</option>
+                            <option value="Passed out">Passed out</option>
+                        </select>
+                        <p id="statusError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div id="courseYearDiv" class="hidden-field">
+                        <label for="courseYear" class="block text-sm font-semibold mb-1 text-blue-700">Course Year *</label>
+                        <select name="courseYear" id="courseYear"
+                            class="w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-blue-50 outline-none transition-all">
+                            <option value="">Select Year</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                        <p id="courseYearError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="orgName" class="block text-sm font-semibold mb-1">Organization/Academic Institute *</label>
+                        <input name="orgName" id="orgName" type="text" value="NIELIT Deemed to be University, Ropar" required
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 bg-gray-50 outline-none transition-all" />
+                        <p id="orgNameError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div class="md:col-span-2" id="categoryContainer">
+                        <label class="block text-sm font-semibold mb-3">Beneficiary Category *</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="category-card flex items-center space-x-2 p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 cursor-pointer transition-colors">
+                                <input type="radio" name="category" value="Career aspirant/Student" required class="text-blue-600 focus:ring-blue-500" />
+                                <span class="text-sm">Career aspirant/Student</span>
+                            </label>
+                            <label class="category-card flex items-center space-x-2 p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 cursor-pointer transition-colors">
+                                <input type="radio" name="category" value="Employment Seeker" class="text-blue-600 focus:ring-blue-500" />
+                                <span class="text-sm">Employment Seeker</span>
+                            </label>
+                            <label class="category-card flex items-center space-x-2 p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 cursor-pointer transition-colors">
+                                <input type="radio" name="category" value="Non-IT Employees" class="text-blue-600 focus:ring-blue-500" />
+                                <span class="text-sm">Non-IT Employees</span>
+                            </label>
+                            <label class="category-card flex items-center space-x-2 p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 cursor-pointer transition-colors">
+                                <input type="radio" name="category" value="IT/PSE Employee" class="text-blue-600 focus:ring-blue-500" />
+                                <span class="text-sm">IT/PSE Employee</span>
+                            </label>
+                        </div>
+                        <p id="categoryError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FSP & Files -->
+            <section class="bg-white rounded-xl">
+                <h2 class="text-xl font-bold text-blue-900 border-b border-gray-200 pb-3 mb-6">3. Previous Programs & Documents</h2>
+                <div class="space-y-6">
+                    <div id="prevFspContainer">
+                        <label class="block text-sm font-semibold mb-2">Involved in previous FSP Program? *</label>
+                        <div class="flex space-x-6">
+                            <label class="cursor-pointer inline-flex items-center"><input type="radio" name="prevFsp" value="Yes" required
+                                    class="mr-2 w-4 h-4 text-blue-600 focus:ring-blue-500" />Yes</label>
+                            <label class="cursor-pointer inline-flex items-center"><input type="radio" name="prevFsp" value="No"
+                                    class="mr-2 w-4 h-4 text-blue-600 focus:ring-blue-500" />No</label>
+                        </div>
+                        <p id="prevFspError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div id="prevFspDetailsDiv" class="hidden-field">
+                        <label for="prevFspDetails" class="block text-sm font-semibold mb-1">If yes, provide details (Program Name / Institute / Date) *</label>
+                        <textarea name="prevFspDetails" id="prevFspDetails" rows="3" placeholder="Provide program name, institute, and approximate dates"
+                            class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-600 outline-none transition-all"></textarea>
+                        <p id="prevFspDetailsError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                    <div>
+                        <label for="fileInput" class="block text-sm font-semibold mb-1">
+                            Upload ID Document (PDF Only) * 
+                            <span class="text-xs text-gray-500 font-normal ml-1">(Accepted: .pdf only - Max 5MB)</span>
+                        </label>
+                        <input name="govIdFile" type="file" id="fileInput" accept=".pdf,application/pdf" required
+                            class="w-full px-4 py-3 border border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 cursor-pointer outline-none transition-all" />
+                        <div id="fileInfo" class="mt-2 text-xs font-medium text-gray-600 hidden"></div>
+                        <p id="fileError" class="error-msg text-red-500 text-xs mt-1.5 hidden font-medium flex items-center gap-1"></p>
+                    </div>
+                </div>
+            </section>
+
+            <div id="formAlert" class="hidden p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium flex items-center gap-2">
+                <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Please correct the errors highlighted above before submitting.</span>
+            </div>
+
+            <button type="submit" id="submitBtn"
+                class="w-full bg-blue-800 hover:bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all text-lg">
+                Submit Application
+            </button>
+        </form>
+    </div>
+
+    <!-- Success Modal Popup -->
+    <div id="successModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center transition-all duration-300">
+        <div class="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 md:p-8 text-center transform transition-all border border-gray-100">
+            <!-- Close Button (X) -->
+            <button onclick="closeSuccessModal()" type="button" aria-label="Close modal"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- Success Icon Badge -->
+            <div class="mx-auto flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-emerald-100 mb-5 ring-8 ring-emerald-50">
+                <svg class="h-8 w-8 md:h-10 md:w-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
+                Application Submitted!
+            </h3>
+            <p class="text-gray-600 text-sm md:text-base mb-6">
+                Your nomination for <span class="font-semibold text-blue-900">AVR Bootcamp</span> has been successfully recorded.
+            </p>
+
+            <!-- WhatsApp Group Invite Card -->
+            <div class="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300/80 rounded-2xl p-5 mb-6 text-left shadow-sm">
+                <div class="flex items-start gap-3.5">
+                    <div class="p-2.5 bg-[#25D366] rounded-xl text-white shadow-md shrink-0">
+                        <!-- WhatsApp SVG Icon -->
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.031 2C6.511 2 2.025 6.486 2.025 12.006c0 1.942.557 3.754 1.523 5.289L2.004 22l4.869-1.503a9.96 9.96 0 005.158 1.51c5.52 0 10.005-4.486 10.005-10.006S17.551 2 12.031 2zm5.836 14.184c-.244.686-1.42 1.31-1.956 1.393-.509.078-1.173.111-3.376-.803-2.483-1.03-4.081-3.565-4.204-3.73-.124-.165-1.002-1.334-1.002-2.544 0-1.21.636-1.804.862-2.049.227-.245.495-.306.66-.306.166 0 .332.002.477.01.153.007.357-.058.558.425.207.498.706 1.724.768 1.849.062.124.103.27.021.434-.083.165-.124.269-.247.414-.124.145-.261.325-.373.436-.124.124-.253.258-.109.507.145.249.643 1.06 1.381 1.718.948.845 1.748 1.107 1.996 1.23.248.125.393.104.538-.062.145-.165.62-1.06.786-1.425.166-.365.332-.304.558-.221.228.083 1.448.683 1.696.808.248.124.414.186.476.29.062.104.062.603-.182 1.289z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-base font-bold text-emerald-950 flex items-center gap-1.5 flex-wrap">
+                            <span>Join Class WhatsApp Group</span>
+                            <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase bg-emerald-200 text-emerald-900 rounded-full tracking-wide">Required</span>
+                        </h4>
+                        <p class="text-xs md:text-sm text-emerald-900/80 mt-1">
+                            Important: Join the class WhatsApp group for daily class schedule, meeting links, and announcements.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="https://chat.whatsapp.com/CcLsN3WesKC7nu57ujLhyV"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-4 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 text-base text-center group cursor-pointer">
+                    <svg class="w-6 h-6 shrink-0 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.031 2C6.511 2 2.025 6.486 2.025 12.006c0 1.942.557 3.754 1.523 5.289L2.004 22l4.869-1.503a9.96 9.96 0 005.158 1.51c5.52 0 10.005-4.486 10.005-10.006S17.551 2 12.031 2zm5.836 14.184c-.244.686-1.42 1.31-1.956 1.393-.509.078-1.173.111-3.376-.803-2.483-1.03-4.081-3.565-4.204-3.73-.124-.165-1.002-1.334-1.002-2.544 0-1.21.636-1.804.862-2.049.227-.245.495-.306.66-.306.166 0 .332.002.477.01.153.007.357-.058.558.425.207.498.706 1.724.768 1.849.062.124.103.27.021.434-.083.165-.124.269-.247.414-.124.145-.261.325-.373.436-.124.124-.253.258-.109.507.145.249.643 1.06 1.381 1.718.948.845 1.748 1.107 1.996 1.23.248.125.393.104.538-.062.145-.165.62-1.06.786-1.425.166-.365.332-.304.558-.221.228.083 1.448.683 1.696.808.248.124.414.186.476.29.062.104.062.603-.182 1.289z"/>
+                    </svg>
+                    <span>Join Class WhatsApp Group</span>
+                    <span class="transition-transform group-hover:translate-x-1">→</span>
+                </a>
+            </div>
+
+            <!-- Done / Dismiss Button -->
+            <button onclick="closeSuccessModal()" type="button"
+                class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all text-sm">
+                Done / Submit Another Application
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('bootcampForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formAlert = document.getElementById('formAlert');
+
+        const titleSelect = document.getElementById('title');
+        const titleError = document.getElementById('titleError');
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('nameError');
+        const dobInput = document.getElementById('dob');
+        const dobError = document.getElementById('dobError');
+        const genderSelect = document.getElementById('gender');
+        const genderError = document.getElementById('genderError');
+        const mobileInput = document.getElementById('mobile');
+        const mobileError = document.getElementById('mobileError');
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('emailError');
+        const aadharInput = document.getElementById('aadhar');
+        const aadharError = document.getElementById('aadharError');
+        const locationInput = document.getElementById('location');
+        const locationError = document.getElementById('locationError');
+        const qualificationInput = document.getElementById('qualification');
+        const qualificationError = document.getElementById('qualificationError');
+        const statusSelect = document.getElementById('status');
+        const statusError = document.getElementById('statusError');
+        const courseYearDiv = document.getElementById('courseYearDiv');
+        const courseYearSelect = document.getElementById('courseYear');
+        const courseYearError = document.getElementById('courseYearError');
+        const orgNameInput = document.getElementById('orgName');
+        const orgNameError = document.getElementById('orgNameError');
+        const categoryContainer = document.getElementById('categoryContainer');
+        const categoryError = document.getElementById('categoryError');
+        const prevFspContainer = document.getElementById('prevFspContainer');
+        const prevFspError = document.getElementById('prevFspError');
+        const prevFspDetailsDiv = document.getElementById('prevFspDetailsDiv');
+        const prevFspDetailsInput = document.getElementById('prevFspDetails');
+        const prevFspDetailsError = document.getElementById('prevFspDetailsError');
+        const fileInput = document.getElementById('fileInput');
+        const fileError = document.getElementById('fileError');
+        const fileInfo = document.getElementById('fileInfo');
+
+        const today = new Date();
+        const maxDobYear = today.getFullYear() - 14;
+        const minDobYear = today.getFullYear() - 85;
+        const pad = (n) => String(n).padStart(2, '0');
+        const formattedTodayMonthDay = `${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+        dobInput.max = `${maxDobYear}-${formattedTodayMonthDay}`;
+        dobInput.min = `${minDobYear}-${formattedTodayMonthDay}`;
+
+        function showError(inputEl, errorEl, message) {
+            if (errorEl) {
+                errorEl.innerHTML = `
+                    <svg class="w-4 h-4 shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>${message}</span>
+                `;
+                errorEl.classList.remove('hidden');
+            }
+            if (inputEl && inputEl.classList) {
+                inputEl.classList.add('border-red-500', 'bg-red-50');
+                inputEl.classList.remove('border-gray-200', 'border-gray-300', 'bg-gray-50');
+            }
+            return false;
+        }
+
+        function clearError(inputEl, errorEl) {
+            if (errorEl) {
+                errorEl.innerHTML = '';
+                errorEl.classList.add('hidden');
+            }
+            if (inputEl && inputEl.classList) {
+                inputEl.classList.remove('border-red-500', 'bg-red-50');
+                if (inputEl.id === 'courseYear') {
+                    inputEl.classList.add('border-blue-300', 'bg-blue-50');
+                } else if (inputEl.id === 'fileInput') {
+                    inputEl.classList.add('border-gray-300', 'bg-gray-50');
+                } else {
+                    inputEl.classList.add('border-gray-200', 'bg-gray-50');
+                }
+            }
+            return true;
+        }
+
+        function validateTitle() {
+            return !titleSelect.value ? showError(titleSelect, titleError, 'Please select a title.') : clearError(titleSelect, titleError);
+        }
+
+        function validateName() {
+            const val = nameInput.value.trim();
+            if (!val) return showError(nameInput, nameError, 'Applicant name is required.');
+            if (val.length < 3) return showError(nameInput, nameError, 'Name must be at least 3 characters.');
+            if (!/^[a-zA-Z\s\.\-']+$/.test(val)) return showError(nameInput, nameError, 'Name can only contain alphabets, spaces, and dots.');
+            return clearError(nameInput, nameError);
+        }
+
+        function validateDob() {
+            const val = dobInput.value;
+            if (!val) return showError(dobInput, dobError, 'Date of birth is required.');
+            const dob = new Date(val);
+            if (isNaN(dob.getTime())) return showError(dobInput, dobError, 'Please enter a valid date.');
+            if (dob >= today) return showError(dobInput, dobError, 'Date of birth cannot be in the future.');
+
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
+
+            if (age < 14) return showError(dobInput, dobError, 'Applicant must be at least 14 years old.');
+            if (age > 85) return showError(dobInput, dobError, 'Please verify your date of birth.');
+            return clearError(dobInput, dobError);
+        }
+
+        function validateGender() {
+            return !genderSelect.value ? showError(genderSelect, genderError, 'Please select your gender.') : clearError(genderSelect, genderError);
+        }
+
+        function validateMobile() {
+            const val = mobileInput.value.trim();
+            if (!val) return showError(mobileInput, mobileError, 'Mobile number is required.');
+            if (!/^[6-9]\d{9}$/.test(val)) return showError(mobileInput, mobileError, 'Please enter a valid 10-digit mobile number (starts with 6, 7, 8, 9).');
+            return clearError(mobileInput, mobileError);
+        }
+
+        function validateEmail() {
+            const val = emailInput.value.trim();
+            if (!val) return showError(emailInput, emailError, 'Email address is required.');
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(val)) return showError(emailInput, emailError, 'Please enter a valid email address (e.g. user@domain.com).');
+            return clearError(emailInput, emailError);
+        }
+
+        function validateAadhar() {
+            const digits = aadharInput.value.replace(/\D/g, '');
+            if (!digits) return showError(aadharInput, aadharError, 'Government ID number is required.');
+            if (digits.length !== 12) return showError(aadharInput, aadharError, `ID number must be exactly 12 digits (currently ${digits.length}).`);
+            if (/^(\d)\1{11}$/.test(digits)) return showError(aadharInput, aadharError, 'Please enter a valid 12-digit ID number.');
+            return clearError(aadharInput, aadharError);
+        }
+
+        function validateLocation() {
+            const val = locationInput.value.trim();
+            if (!val) return showError(locationInput, locationError, 'Native state and district are required.');
+            if (val.length < 3) return showError(locationInput, locationError, 'Please enter full state and district.');
+            return clearError(locationInput, locationError);
+        }
+
+        function validateQualification() {
+            const val = qualificationInput.value.trim();
+            if (!val) return showError(qualificationInput, qualificationError, 'Qualification is required.');
+            if (val.length < 2) return showError(qualificationInput, qualificationError, 'Please specify your degree and branch.');
+            return clearError(qualificationInput, qualificationError);
+        }
+
+        function validateStatus() {
+            if (!statusSelect.value) return showError(statusSelect, statusError, 'Please select your academic/professional status.');
+            clearError(statusSelect, statusError);
+            if (statusSelect.value === 'Pursuing') return validateCourseYear();
+            clearError(courseYearSelect, courseYearError);
+            return true;
+        }
+
+        function validateCourseYear() {
+            if (statusSelect.value === 'Pursuing' && !courseYearSelect.value) {
+                return showError(courseYearSelect, courseYearError, 'Please select your course year.');
+            }
+            return clearError(courseYearSelect, courseYearError);
+        }
+
+        function validateOrgName() {
+            const val = orgNameInput.value.trim();
+            if (!val) return showError(orgNameInput, orgNameError, 'Organization or institute name is required.');
+            if (val.length < 2) return showError(orgNameInput, orgNameError, 'Please enter a valid institute/organization name.');
+            return clearError(orgNameInput, orgNameError);
+        }
+
+        function validateCategory() {
+            const checked = document.querySelector('input[name="category"]:checked');
+            return !checked ? showError(null, categoryError, 'Please select a beneficiary category.') : clearError(null, categoryError);
+        }
+
+        function validatePrevFsp() {
+            const checked = document.querySelector('input[name="prevFsp"]:checked');
+            if (!checked) return showError(null, prevFspError, 'Please select Yes or No.');
+            clearError(null, prevFspError);
+            if (checked.value === 'Yes') return validatePrevFspDetails();
+            clearError(prevFspDetailsInput, prevFspDetailsError);
+            return true;
+        }
+
+        function validatePrevFspDetails() {
+            const checked = document.querySelector('input[name="prevFsp"]:checked');
+            if (checked && checked.value === 'Yes') {
+                const val = prevFspDetailsInput.value.trim();
+                if (!val) return showError(prevFspDetailsInput, prevFspDetailsError, 'Please provide details of previous FSP program.');
+                if (val.length < 5) return showError(prevFspDetailsInput, prevFspDetailsError, 'Details should be at least 5 characters (Program/Institute/Date).');
+            }
+            return clearError(prevFspDetailsInput, prevFspDetailsError);
+        }
+
+        function validateFile() {
+            const file = fileInput.files[0];
+            if (!file) {
+                fileInfo.classList.add('hidden');
+                return showError(fileInput, fileError, 'Please upload an ID document (PDF format only).');
+            }
+
+            const allowedExtensions = /\.pdf$/i;
+            const allowedMime = ['application/pdf'];
+            const isValidType = allowedMime.includes(file.type) || allowedExtensions.test(file.name);
+
+            if (!isValidType) {
+                fileInfo.classList.add('hidden');
+                fileInput.value = '';
+                return showError(fileInput, fileError, 'Invalid format. Only PDF files (.pdf) are allowed.');
+            }
+
+            const maxSizeBytes = 5 * 1024 * 1024;
+            if (file.size > maxSizeBytes) {
+                fileInfo.classList.add('hidden');
+                fileInput.value = '';
+                const currentSizeMb = (file.size / (1024 * 1024)).toFixed(1);
+                return showError(fileInput, fileError, `File size (${currentSizeMb} MB) exceeds the 5MB limit.`);
+            }
+
+            const displaySize = file.size > 1024 * 1024
+                ? (file.size / (1024 * 1024)).toFixed(1) + ' MB'
+                : (file.size / 1024).toFixed(0) + ' KB';
+            fileInfo.innerHTML = `<span class="text-green-600 font-semibold">✓ Selected PDF:</span> ${file.name} (${displaySize})`;
+            fileInfo.classList.remove('hidden');
+
+            return clearError(fileInput, fileError);
+        }
+
+        titleSelect.addEventListener('change', validateTitle);
+        nameInput.addEventListener('input', validateName);
+        nameInput.addEventListener('blur', validateName);
+        dobInput.addEventListener('change', validateDob);
+        genderSelect.addEventListener('change', validateGender);
+
+        mobileInput.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 10);
+            validateMobile();
+        });
+        mobileInput.addEventListener('blur', validateMobile);
+
+        emailInput.addEventListener('input', validateEmail);
+        emailInput.addEventListener('blur', validateEmail);
+
+        aadharInput.addEventListener('input', function (e) {
+            const digits = e.target.value.replace(/\D/g, '').substring(0, 12);
+            const formatted = digits.match(/.{1,4}/g)?.join(' ') || digits;
+            e.target.value = formatted;
+            validateAadhar();
+        });
+        aadharInput.addEventListener('blur', validateAadhar);
+
+        locationInput.addEventListener('input', validateLocation);
+        qualificationInput.addEventListener('input', validateQualification);
+        orgNameInput.addEventListener('input', validateOrgName);
+
+        statusSelect.addEventListener('change', function (e) {
+            if (e.target.value === 'Pursuing') {
+                courseYearDiv.classList.remove('hidden-field');
+                courseYearSelect.required = true;
+            } else {
+                courseYearDiv.classList.add('hidden-field');
+                courseYearSelect.required = false;
+                courseYearSelect.value = '';
+                clearError(courseYearSelect, courseYearError);
+            }
+            validateStatus();
+        });
+
+        courseYearSelect.addEventListener('change', validateCourseYear);
+
+        document.querySelectorAll('input[name="category"]').forEach(radio => {
+            radio.addEventListener('change', validateCategory);
+        });
+
+        document.querySelectorAll('input[name="prevFsp"]').forEach(radio => {
+            radio.addEventListener('change', function (e) {
+                if (e.target.value === 'Yes') {
+                    prevFspDetailsDiv.classList.remove('hidden-field');
+                    prevFspDetailsInput.required = true;
+                } else {
+                    prevFspDetailsDiv.classList.add('hidden-field');
+                    prevFspDetailsInput.required = false;
+                    prevFspDetailsInput.value = '';
+                    clearError(prevFspDetailsInput, prevFspDetailsError);
+                }
+                validatePrevFsp();
+            });
+        });
+
+        prevFspDetailsInput.addEventListener('input', validatePrevFspDetails);
+        fileInput.addEventListener('change', validateFile);
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function validateAll() {
+            const checks = [
+                { valid: validateTitle(), el: titleSelect },
+                { valid: validateName(), el: nameInput },
+                { valid: validateDob(), el: dobInput },
+                { valid: validateGender(), el: genderSelect },
+                { valid: validateMobile(), el: mobileInput },
+                { valid: validateEmail(), el: emailInput },
+                { valid: validateAadhar(), el: aadharInput },
+                { valid: validateLocation(), el: locationInput },
+                { valid: validateQualification(), el: qualificationInput },
+                { valid: validateStatus(), el: statusSelect },
+                { valid: validateCourseYear(), el: courseYearSelect },
+                { valid: validateOrgName(), el: orgNameInput },
+                { valid: validateCategory(), el: categoryContainer },
+                { valid: validatePrevFsp(), el: prevFspContainer },
+                { valid: validatePrevFspDetails(), el: prevFspDetailsInput },
+                { valid: validateFile(), el: fileInput }
+            ];
+
+            let firstInvalidEl = null;
+            let isAllValid = true;
+
+            for (const check of checks) {
+                if (!check.valid) {
+                    isAllValid = false;
+                    if (!firstInvalidEl && check.el) firstInvalidEl = check.el;
+                }
+            }
+
+            if (!isAllValid) {
+                formAlert.classList.remove('hidden');
+                if (firstInvalidEl) {
+                    firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (typeof firstInvalidEl.focus === 'function') firstInvalidEl.focus();
+                }
+            } else {
+                formAlert.classList.add('hidden');
+            }
+            return isAllValid;
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (!validateAll()) return;
+
+            submitBtn.innerText = 'Processing Application...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(e.target);
+            const file = fileInput.files[0];
+            let fileBase64 = "";
+
+            try {
+                if (file) fileBase64 = await getBase64(file);
+
+                const payload = {
+                    title: formData.get('title'),
+                    name: formData.get('name').trim(),
+                    dob: formData.get('dob'),
+                    gender: formData.get('gender'),
+                    mobile: formData.get('mobile').trim(),
+                    email: formData.get('email').trim(),
+                    aadhar: formData.get('aadhar').trim(),
+                    location: formData.get('location').trim(),
+                    orgName: formData.get('orgName').trim(),
+                    qualification: formData.get('qualification').trim(),
+                    status: formData.get('status'),
+                    courseYear: formData.get('courseYear') || "N/A",
+                    category: formData.get('category'),
+                    prevFsp: formData.get('prevFsp'),
+                    prevFspDetails: formData.get('prevFspDetails') ? formData.get('prevFspDetails').trim() : "N/A",
+                    fileName: file ? file.name : "",
+                    fileMimeType: file ? file.type : "",
+                    fileBase64: fileBase64
+                };
+
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'application/json' },
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    openSuccessModal();
+                    form.reset();
+                    fileInfo.classList.add('hidden');
+                    courseYearDiv.classList.add('hidden-field');
+                    prevFspDetailsDiv.classList.add('hidden-field');
+                } else {
+                    alert('Error: ' + (result.message || 'Submission failed'));
+                }
+            } catch (error) {
+                alert('Server Error submitting form.');
+                console.error(error);
+            } finally {
+                submitBtn.innerText = 'Submit Application';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function openSuccessModal() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeSuccessModal();
+        });
+
+        const successModal = document.getElementById('successModal');
+        if (successModal) {
+            successModal.addEventListener('click', function (e) {
+                if (e.target === this) closeSuccessModal();
+            });
+        }
+    </script>
+</body>
+
+</html>
