@@ -4,7 +4,8 @@ import re
 import tempfile
 import zipfile
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
+
 import requests
 from pypdf import PdfWriter
 from PIL import Image
@@ -33,6 +34,12 @@ if not os.path.exists(TEMPLATE_DOCX_PATH):
         TEMPLATE_DOCX_PATH = alt_path
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
+
+# ==========================================
+# Auth / Session Config
+# ==========================================
+app.secret_key = os.environ.get('SECRET_KEY', 'bcmp-fsp-2026-secret-key-x9z')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'bcmp@admin2026')
 
 # Google Apps Script Web App URL (Database + Drive Backend)
 GAS_URL = "https://script.google.com/macros/s/AKfycbwO6x6NlvJG1l5jYp10l_SVryeXuExp5-c61GoPiIbyQpx7vsAqsq_lfTOpKbgl0TWO/exec"
@@ -168,11 +175,11 @@ def build_candidate_context(candidate):
     status_full = f"Pursuing ({course_year})" if (status == 'Pursuing' and course_year and course_year != 'N/A') else status
 
     cat_raw = get_prop(candidate, 'category').lower()
-    cat_student = '✓ ' if any(kw in cat_raw for kw in ["career aspirant", "student"]) else ''
-    cat_seeker = '✓ ' if any(kw in cat_raw for kw in ["employment seeker", "passed out"]) else ''
-    cat_non_it = '✓ ' if any(kw in cat_raw for kw in ["non-it"]) else ''
-    cat_it = '✓ ' if any(kw in cat_raw for kw in ["it employee", "it/pse", "it & non-it", "it &non-it"]) else ''
-    cat_pse = '✓ ' if any(kw in cat_raw for kw in ["pse employee"]) else ''
+    cat_student = '\u2713 ' if any(kw in cat_raw for kw in ["career aspirant", "student"]) else ''
+    cat_seeker = '\u2713 ' if any(kw in cat_raw for kw in ["employment seeker", "passed out"]) else ''
+    cat_non_it = '\u2713 ' if any(kw in cat_raw for kw in ["non-it"]) else ''
+    cat_it = '\u2713 ' if any(kw in cat_raw for kw in ["it employee", "it/pse", "it & non-it", "it &non-it"]) else ''
+    cat_pse = '\u2713 ' if any(kw in cat_raw for kw in ["pse employee"]) else ''
 
     prev_fsp = get_prop(candidate, 'prevfsp', 'prev_fsp') or 'No'
     prev_fsp_details = get_prop(candidate, 'prevfspdetails', 'prev_fsp_details')
@@ -247,7 +254,9 @@ def convert_docx_file_to_pdf(docx_path, pdf_path, word_app=None):
         pythoncom.CoUninitialize()
 
 def generate_fallback_pdf(candidate) -> bytes:
-    """Fallback generator using ReportLab when Word COM is unavailable."""
+    """Fallback generator using ReportLab when Word COM is unavailable.
+    Uses ASCII-safe tick mark [*] so Helvetica renders correctly on Linux/Render.
+    """
     ctx = build_candidate_context(candidate)
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=A4)
@@ -277,14 +286,18 @@ def generate_fallback_pdf(candidate) -> bytes:
     for row_key, value in simple_fields.items():
         if row_key in ROW_Y_FRACTIONS:
             y = frac_to_rl_y(ROW_Y_FRACTIONS[row_key])
-            c.drawString(FIELD_X, y, str(value))
+            # Encode to latin-1 safe string (strip unsupported chars)
+            safe_val = str(value).encode('latin-1', errors='replace').decode('latin-1')
+            c.drawString(FIELD_X, y, safe_val)
 
     c.drawString(FIELD_X, frac_to_rl_y(0.722), f"2. {ctx['prev_fsp_2']}")
 
+    # Category checkboxes — use ASCII "[*]" tick for Helvetica compatibility
     cat_checks = [ctx['cat_student'], ctx['cat_seeker'], ctx['cat_non_it'], ctx['cat_it'], ctx['cat_pse']]
     for i, (label, tick) in enumerate(zip(CATEGORY_LABELS, cat_checks)):
         y = frac_to_rl_y(CATEGORY_Y_FRACTIONS[i])
-        mark = "✓ " if (tick and '✓' in tick) else "   "
+        # tick is '✓ ' if matched, '' if not — check if it's non-empty
+        mark = "[*] " if tick and tick.strip() else "[ ] "
         c.drawString(FIELD_X, y, f"{mark}{label}")
 
     c.save()
@@ -308,12 +321,43 @@ def generate_filled_pdf(candidate) -> bytes:
         print(f"[PDF Generation] Word template export error ({e}). Using ReportLab fallback.")
         return generate_fallback_pdf(candidate)
 
+# ==========================================
+# Auth helpers
+# ==========================================
+def is_admin_logged_in():
+    return session.get('admin_logged_in') is True
+
+# ==========================================
+# Routes — Public
+# ==========================================
 @app.route('/')
 def home():
     return render_template('index.html')
 
+# ==========================================
+# Routes — Admin Auth
+# ==========================================
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    error = None
+    if request.method == 'POST':
+        pwd = request.form.get('password', '')
+        if pwd == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin_page'))
+        else:
+            error = "Incorrect password. Please try again."
+    return render_template('admin_login.html', error=error)
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('admin_login'))
+
 @app.route('/admin')
 def admin_page():
+    if not is_admin_logged_in():
+        return redirect(url_for('admin_login'))
     return render_template('admin.html')
 
 _CACHED_CANDIDATE_COUNT = 0
@@ -338,12 +382,11 @@ def api_submit():
                 _CACHED_CANDIDATE_COUNT += 1
                 cand_idx = _CACHED_CANDIDATE_COUNT
 
-        # 2. Rename uploaded ID document to: {index}_{candidate_name}.{ext}
+        # 2. Rename uploaded ID document to: {index}_{candidate_name}.pdf
         orig_filename = payload.get('fileName', '')
         cand_name = payload.get('name', '').strip()
 
         if orig_filename and cand_name:
-            # Enforce .pdf extension for Drive upload
             safe_name = re.sub(r'[\\/*?:"<>|]', '', cand_name).strip()
             safe_name = " ".join(safe_name.split())
             if not safe_name:
@@ -357,7 +400,6 @@ def api_submit():
 
         res = requests.post(GAS_URL, json=payload, headers={'Content-Type': 'text/plain;charset=utf-8'}, timeout=60)
         
-        # If successfully submitted, increment cached count
         if cand_idx is not None:
             _CACHED_CANDIDATE_COUNT = cand_idx
 
@@ -368,6 +410,8 @@ def api_submit():
 @app.route('/api/candidates', methods=['GET'])
 def api_candidates():
     global _CACHED_CANDIDATE_COUNT
+    if not is_admin_logged_in():
+        return jsonify({'error': 'Unauthorized'}), 401
     try:
         res = requests.get(GAS_URL, timeout=30)
         raw_data = res.json()
@@ -381,6 +425,8 @@ def api_candidates():
 
 @app.route('/api/download-single/<int:idx>', methods=['GET'])
 def download_single(idx):
+    if not is_admin_logged_in():
+        return redirect(url_for('admin_login'))
     try:
         res = requests.get(GAS_URL, timeout=30)
         candidates = normalize_candidates(res.json())
@@ -399,6 +445,8 @@ def download_single(idx):
 
 @app.route('/api/download-single-docx/<int:idx>', methods=['GET'])
 def download_single_docx(idx):
+    if not is_admin_logged_in():
+        return redirect(url_for('admin_login'))
     try:
         res = requests.get(GAS_URL, timeout=30)
         candidates = normalize_candidates(res.json())
@@ -426,6 +474,8 @@ def download_single_docx(idx):
 
 @app.route('/api/download-merged', methods=['GET'])
 def download_merged():
+    if not is_admin_logged_in():
+        return redirect(url_for('admin_login'))
     year = request.args.get('year', 'All')
     try:
         res = requests.get(GAS_URL, timeout=30)
@@ -489,6 +539,8 @@ def download_merged():
 
 @app.route('/api/download-zip', methods=['GET'])
 def download_zip():
+    if not is_admin_logged_in():
+        return redirect(url_for('admin_login'))
     year = request.args.get('year', 'All')
     try:
         res = requests.get(GAS_URL, timeout=30)
